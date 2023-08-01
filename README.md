@@ -49,10 +49,11 @@ For each instruction, we can define a struct that starts with only the free acco
 Off-chain clients can use this transformation procedure to require minimal account inputs from their users.
 
 On-chain program uses this same transformation procedure to verify accounts:
-    - create the full `*Accounts` struct from the AccountInfo slice
-    - create the starting free-accounts only struct from a subslice of the AccountInfo slice
-    - complete this transformation procedure to end up with `*Keys`
-    - compare `*Keys` against `*Accounts` to make sure the pubkeys match
+
+- create the full `*Accounts` struct from the AccountInfo slice
+- create the starting free-accounts only struct from a subslice of the AccountInfo slice
+- complete this transformation procedure to end up with `*Keys`
+- compare `*Keys` against `*Accounts` to make sure the pubkeys match
 
 ### Example
 
