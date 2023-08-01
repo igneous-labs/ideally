@@ -1,0 +1,5 @@
+[workspace]
+
+members = [
+    "spl_associated_token_account_interface"
+]
