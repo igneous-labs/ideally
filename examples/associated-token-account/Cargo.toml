@@ -1,5 +1,6 @@
 [workspace]
 
 members = [
-    "spl_associated_token_account_interface"
+    "spl_associated_token_account_interface",
+    "spl_associated_token_account_lib"
 ]
