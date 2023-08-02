@@ -7,4 +7,6 @@ edition = "2021"
 
 [dependencies]
 solana-program = "^1.16"
+solana-readonly-account = { git = "https://github.com/igneous-labs/solana-readonly-account", branch = "master" }
 spl_associated_token_account_interface = { path = "../spl_associated_token_account_interface" }
+spl-token-2022 = { version = "^0.7", features = ["no-entrypoint"] }

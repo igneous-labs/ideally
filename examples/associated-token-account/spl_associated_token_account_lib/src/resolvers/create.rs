@@ -11,7 +11,7 @@ pub struct CreateRootKeys {
 }
 
 impl CreateRootKeys {
-    pub fn transform(&self) -> (CreateKeys, AtaCreatePdaArgs) {
+    pub fn resolve(&self) -> (CreateKeys, AtaCreatePdaArgs) {
         let find_pda_args = AtaFindPdaArgs {
             wallet: self.wallet,
             mint: self.mint,
@@ -35,7 +35,7 @@ impl CreateRootKeys {
     }
 
     /// plz figure out they're the same type and optimize this away compiler
-    pub fn transform_idempotent(&self) -> (CreateIdempotentKeys, AtaCreatePdaArgs) {
+    pub fn resolve_idempotent(&self) -> (CreateIdempotentKeys, AtaCreatePdaArgs) {
         let (
             CreateKeys {
                 funding_account,
@@ -46,7 +46,7 @@ impl CreateRootKeys {
                 associated_token_account,
             },
             create_pda_args,
-        ) = self.transform();
+        ) = self.resolve();
         (
             CreateIdempotentKeys {
                 funding_account,

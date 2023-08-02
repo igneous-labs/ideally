@@ -15,7 +15,7 @@ use spl_associated_token_account_interface::{
     SplAssociatedTokenAccountProgramIx, CREATE_IX_ACCOUNTS_LEN, RECOVER_NESTED_IX_ACCOUNTS_LEN,
 };
 use spl_associated_token_account_lib::resolvers::{
-    create::CreateRootKeys, recover_nested::RecoverNestedRootKeys,
+    create::CreateRootKeys, recover_nested::RecoverNestedRootAccounts,
 };
 use spl_token_2022::{
     extension::{ExtensionType, StateWithExtensions},
@@ -67,7 +67,7 @@ fn process_create_associated_token_account(
         mint: *mint.key,
         token_program: *token_program.key,
     };
-    let (expected_keys, ata_create_pda_args) = free_accs.transform();
+    let (expected_keys, ata_create_pda_args) = free_accs.resolve();
     let actual_accounts_slice: &[AccountInfo; CREATE_IX_ACCOUNTS_LEN] = accounts
         .get(..CREATE_IX_ACCOUNTS_LEN)
         .ok_or(ProgramError::NotEnoughAccountKeys)?
@@ -155,14 +155,12 @@ pub fn process_recover_nested(accounts: &[AccountInfo]) -> ProgramResult {
     let wallet = accounts.get(2).ok_or(ProgramError::NotEnoughAccountKeys)?;
     let owner_token_account_mint = accounts.get(4).ok_or(ProgramError::NotEnoughAccountKeys)?;
     let nested_mint = accounts.get(1).ok_or(ProgramError::NotEnoughAccountKeys)?;
-    let token_program = accounts.get(6).ok_or(ProgramError::NotEnoughAccountKeys)?;
-    let free_accs = RecoverNestedRootKeys {
+    let free_accs = RecoverNestedRootAccounts {
         wallet: *wallet.key,
-        owner_token_account_mint: *owner_token_account_mint.key,
-        nested_mint: *nested_mint.key,
-        token_program: *token_program.key,
+        owner_token_account_mint,
+        nested_mint,
     };
-    let (expected_keys, owner_ata_create_pda_args) = free_accs.transform();
+    let (expected_keys, owner_ata_create_pda_args) = free_accs.resolve()?;
     let actual_accounts_slice: &[AccountInfo; RECOVER_NESTED_IX_ACCOUNTS_LEN] = accounts
         .get(..RECOVER_NESTED_IX_ACCOUNTS_LEN)
         .ok_or(ProgramError::NotEnoughAccountKeys)?
@@ -191,22 +189,18 @@ pub fn process_recover_nested(accounts: &[AccountInfo]) -> ProgramResult {
             return Err(ProgramError::InvalidSeeds);
         }
 
+        if actual_pubkey == *recover_nested_accounts.token_program.key {
+            msg!("Incorrect token program");
+            return Err(ProgramError::IllegalOwner);
+        }
+
         return Err(ProgramError::InvalidAccountData);
     }
     recover_nested_verify_account_privileges(&recover_nested_accounts)?;
 
-    // TODO: this check can be removed once we turn token_program into a constrained account
-    if recover_nested_accounts.owner_token_account_mint.owner
-        != recover_nested_accounts.token_program.key
-    {
-        msg!("Owner mint not owned by provided token program");
-        return Err(ProgramError::IllegalOwner);
-    }
-
     // Account data is dropped at the end of this, so the CPI can succeed
     // without a double-borrow
     let (amount, decimals) = {
-        // TODO: this check can be removed once we turn token_program into a constrained account
         // Check owner associated token account data
         if recover_nested_accounts.owner_associated_token_account.owner
             != recover_nested_accounts.token_program.key
@@ -224,7 +218,6 @@ pub fn process_recover_nested(accounts: &[AccountInfo]) -> ProgramResult {
             return Err(SplAssociatedTokenAccountError::InvalidOwner.into());
         }
 
-        // TODO: this check can be removed once we turn token_program into a constrained account
         // Check nested associated token account data
         if recover_nested_accounts.nested.owner != recover_nested_accounts.token_program.key {
             msg!("Nested associated token account not owned by provided token program");
@@ -238,13 +231,6 @@ pub fn process_recover_nested(accounts: &[AccountInfo]) -> ProgramResult {
             return Err(SplAssociatedTokenAccountError::InvalidOwner.into());
         }
         let amount = nested_account.base.amount;
-
-        // TODO: this check can be removed once we turn token_program into a constrained account
-        // Check nested token mint data
-        if recover_nested_accounts.nested_mint.owner != recover_nested_accounts.token_program.key {
-            msg!("Nested mint account not owned by provided token program");
-            return Err(ProgramError::IllegalOwner);
-        }
         let nested_mint_data = recover_nested_accounts.nested_mint.data.borrow();
         let nested_mint = StateWithExtensions::<Mint>::unpack(&nested_mint_data)?;
         let decimals = nested_mint.base.decimals;

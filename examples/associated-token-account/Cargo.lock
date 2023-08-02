@@ -611,6 +611,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "derive_more"
+version = "0.99.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4fb810d30a7c1953f91334de7244731fc3f3c10d7fe163338a35b9f640960321"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
+]
+
+[[package]]
 name = "digest"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1611,6 +1622,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "solana-readonly-account"
+version = "0.1.0"
+source = "git+https://github.com/igneous-labs/solana-readonly-account?branch=master#ba5bfea21401f04e3b790ec97448f8a6f31a904a"
+dependencies = [
+ "derive_more",
+ "solana-program",
+]
+
+[[package]]
 name = "solana-sdk"
 version = "1.16.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1877,6 +1897,8 @@ name = "spl_associated_token_account_lib"
 version = "0.1.0"
 dependencies = [
  "solana-program",
+ "solana-readonly-account",
+ "spl-token-2022",
  "spl_associated_token_account_interface",
 ]
 
