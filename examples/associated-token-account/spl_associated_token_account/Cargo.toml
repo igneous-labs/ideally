@@ -11,7 +11,7 @@ test-sbf = []
 solana-program = "^1.16"
 spl_associated_token_account_interface = { path = "../spl_associated_token_account_interface" }
 spl_associated_token_account_lib = { path = "../spl_associated_token_account_lib" }
-spl-token-2022 = "^0.7"
+spl-token-2022 = { version = "^0.7", features = ["no-entrypoint"] }
 
 [lib]
 crate-type = ["cdylib", "lib"]
