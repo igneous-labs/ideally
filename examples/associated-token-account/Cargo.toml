@@ -1,7 +1,12 @@
 [workspace]
 
 members = [
+    "program-test",
     "spl_associated_token_account",
     "spl_associated_token_account_interface",
     "spl_associated_token_account_lib"
 ]
+
+# ExtensionType::try_calculate_account_len not yet published 
+[patch.crates-io]
+spl-token-2022 = { git = "https://github.com/solana-labs/solana-program-library", rev = "37d21c6493de474f72e247931dbb42274ea002ba"}

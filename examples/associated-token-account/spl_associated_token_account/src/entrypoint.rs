@@ -11,8 +11,8 @@ fn process_instruction(
     accounts: &[AccountInfo],
     instruction_data: &[u8],
 ) -> ProgramResult {
-    if *program_id != spl_associated_token_account_interface::ID {
+    if *program_id != crate::ID {
         return Err(ProgramError::IncorrectProgramId);
     }
-    crate::processor::process_instruction(accounts, instruction_data)
+    crate::processor::process_instruction(program_id, accounts, instruction_data)
 }

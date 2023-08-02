@@ -4,6 +4,7 @@ use solana_program::{
     msg,
     program::{invoke, invoke_signed},
     program_error::ProgramError,
+    pubkey::Pubkey,
     rent::Rent,
     system_program,
     sysvar::Sysvar,
@@ -33,7 +34,11 @@ enum CreateMode {
     Idempotent,
 }
 
-pub fn process_instruction(accounts: &[AccountInfo], input: &[u8]) -> ProgramResult {
+pub fn process_instruction(
+    _program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    input: &[u8],
+) -> ProgramResult {
     let instruction = if input.is_empty() {
         SplAssociatedTokenAccountProgramIx::Create(CreateIxArgs {})
     } else {
