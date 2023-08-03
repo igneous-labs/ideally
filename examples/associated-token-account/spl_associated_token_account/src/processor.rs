@@ -157,7 +157,7 @@ fn process_create_associated_token_account(
 }
 
 pub fn process_recover_nested(accounts: &[AccountInfo]) -> ProgramResult {
-    let wallet = accounts.get(2).ok_or(ProgramError::NotEnoughAccountKeys)?;
+    let wallet = accounts.get(5).ok_or(ProgramError::NotEnoughAccountKeys)?;
     let owner_token_account_mint = accounts.get(4).ok_or(ProgramError::NotEnoughAccountKeys)?;
     let nested_mint = accounts.get(1).ok_or(ProgramError::NotEnoughAccountKeys)?;
     let free_accs = RecoverNestedRootAccounts {

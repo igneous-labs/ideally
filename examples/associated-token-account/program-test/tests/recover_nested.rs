@@ -619,7 +619,9 @@ async fn fail_wrong_spl_token_program() {
         owner_associated_token_address,
         wallet,
         transaction,
-        Some(InstructionError::IllegalOwner),
+        // NB: changed from original IllegalOwner
+        // bec change in checking procedure changes err returned
+        Some(InstructionError::InvalidSeeds),
     )
     .await;
 }

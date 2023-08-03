@@ -26,33 +26,53 @@ impl<A: ReadonlyAccount + KeyedAccount> RecoverNestedRootAccounts<A> {
     /// .1 is owner_token_account signer seeds args
     pub fn resolve(&self) -> Result<(RecoverNestedKeys, AtaCreatePdaArgs), ProgramError> {
         let token_program = self.det_token_program()?;
+        let root_keys = RecoverNestedRootKeys {
+            wallet: self.wallet,
+            owner_token_account_mint: *self.owner_token_account_mint.key(),
+            nested_mint: *self.nested_mint.key(),
+            token_program,
+        };
+        Ok(root_keys.resolve())
+    }
+}
+
+pub struct RecoverNestedRootKeys {
+    pub wallet: Pubkey,
+    pub owner_token_account_mint: Pubkey,
+    pub nested_mint: Pubkey,
+    pub token_program: Pubkey,
+}
+
+impl RecoverNestedRootKeys {
+    /// .1 is owner_token_account signer seeds args
+    pub fn resolve(&self) -> (RecoverNestedKeys, AtaCreatePdaArgs) {
         let find_owner_token_account_args = AtaFindPdaArgs {
             wallet: self.wallet,
-            mint: *self.owner_token_account_mint.key(),
-            token_program,
+            mint: self.owner_token_account_mint,
+            token_program: self.token_program,
         };
         let (owner_associated_token_account, bump) =
             find_owner_token_account_args.get_associated_token_address_and_bump_seed();
         let find_nested_token_account_args = AtaFindPdaArgs {
             wallet: owner_associated_token_account,
-            mint: *self.nested_mint.key(),
-            token_program,
+            mint: self.nested_mint,
+            token_program: self.token_program,
         };
         let (nested, _) =
             find_nested_token_account_args.get_associated_token_address_and_bump_seed();
         let find_wallet_ata_args = AtaFindPdaArgs {
             wallet: self.wallet,
-            mint: *self.nested_mint.key(),
-            token_program,
+            mint: self.nested_mint,
+            token_program: self.token_program,
         };
         let (wallet_associated_token_account, _) =
             find_wallet_ata_args.get_associated_token_address_and_bump_seed();
-        Ok((
+        (
             RecoverNestedKeys {
                 wallet: self.wallet,
-                owner_token_account_mint: *self.owner_token_account_mint.key(),
-                nested_mint: *self.nested_mint.key(),
-                token_program,
+                owner_token_account_mint: self.owner_token_account_mint,
+                nested_mint: self.nested_mint,
+                token_program: self.token_program,
                 nested,
                 owner_associated_token_account,
                 wallet_associated_token_account,
@@ -61,6 +81,6 @@ impl<A: ReadonlyAccount + KeyedAccount> RecoverNestedRootAccounts<A> {
                 find: find_owner_token_account_args,
                 bump: [bump],
             },
-        ))
+        )
     }
 }

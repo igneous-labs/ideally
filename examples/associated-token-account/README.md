@@ -16,4 +16,6 @@ In general, we tried to follow the original program structure as closely as poss
 
 ## Tests
 
-Run the tests copied from upstream with `cd program-test && cargo test-sbf`. Make sure v1.16 solana tools are used
+Run the tests copied from upstream with `cd program-test && cargo test-sbf`. Make sure v1.16 solana tools are used.
+
+**MUST** manually rebuild program with `cargo build-sbf` before running `program-tests` on every modification.
