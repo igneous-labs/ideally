@@ -1,0 +1,21 @@
+[package]
+name = "spl_associated_token_account"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+no-entrypoint = []
+test-sbf = []
+
+[dependencies]
+solana-program = "^1.16"
+spl_associated_token_account_interface = { path = "../spl_associated_token_account_interface" }
+spl_associated_token_account_lib = { path = "../spl_associated_token_account_lib" }
+spl-token = { version = "^4.0", features = ["no-entrypoint"] }
+spl-token-2022 = { version = "^0.7", features = ["no-entrypoint"] }
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
