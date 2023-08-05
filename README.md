@@ -55,7 +55,7 @@ Off-chain clients can use this resolution procedure to require minimal account i
 On-chain program uses this same resolution procedure to verify accounts:
 
 - create the full `*Accounts` struct from the AccountInfo slice
-- create the starting free-accounts only struct from a subslice of the AccountInfo slice
+- create the starting free-accounts-only struct from a subslice of the AccountInfo slice
 - complete this resolution procedure to end up with `*Keys`
 - compare `*Keys` against `*Accounts` to make sure the pubkeys match
 
