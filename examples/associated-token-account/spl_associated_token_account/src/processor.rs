@@ -16,7 +16,7 @@ use spl_associated_token_account_interface::{
     SplAssociatedTokenAccountProgramIx, CREATE_IX_ACCOUNTS_LEN, RECOVER_NESTED_IX_ACCOUNTS_LEN,
 };
 use spl_associated_token_account_lib::resolvers::{
-    create::CreateRootKeys, recover_nested::RecoverNestedRootAccounts,
+    create::CreateRootAccounts, recover_nested::RecoverNestedRootAccounts,
 };
 use spl_token_2022::{
     extension::{ExtensionType, StateWithExtensions},
@@ -65,12 +65,10 @@ fn process_create_associated_token_account(
     let funding_account = accounts.get(0).ok_or(ProgramError::NotEnoughAccountKeys)?;
     let wallet = accounts.get(2).ok_or(ProgramError::NotEnoughAccountKeys)?;
     let mint = accounts.get(3).ok_or(ProgramError::NotEnoughAccountKeys)?;
-    let token_program = accounts.get(5).ok_or(ProgramError::NotEnoughAccountKeys)?;
-    let free_accs = CreateRootKeys {
+    let free_accs = CreateRootAccounts {
         funding_account: *funding_account.key,
         wallet: *wallet.key,
-        mint: *mint.key,
-        token_program: *token_program.key,
+        mint,
     };
     let (expected_keys, ata_create_pda_args) = free_accs.resolve();
     let actual_accounts_slice: &[AccountInfo; CREATE_IX_ACCOUNTS_LEN] = accounts

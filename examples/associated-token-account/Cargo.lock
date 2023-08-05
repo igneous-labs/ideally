@@ -495,7 +495,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4114279215a005bc675e386011e594e1d9b800918cea18fcadadcce864a2046b"
 dependencies = [
  "borsh-derive 0.10.3",
- "hashbrown 0.13.2",
+ "hashbrown 0.11.2",
 ]
 
 [[package]]
@@ -3806,7 +3806,7 @@ dependencies = [
 [[package]]
 name = "solana-readonly-account"
 version = "0.1.0"
-source = "git+https://github.com/igneous-labs/solana-readonly-account?branch=master#ba5bfea21401f04e3b790ec97448f8a6f31a904a"
+source = "git+https://github.com/igneous-labs/solana-readonly-account?branch=master#3f832b756bdd3ed555f673e4fa1bcad0f7de46e8"
 dependencies = [
  "derive_more",
  "solana-program",

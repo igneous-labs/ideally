@@ -1,16 +1,16 @@
 use solana_program::{program_error::ProgramError, pubkey::Pubkey};
-use solana_readonly_account::{KeyedAccount, ReadonlyAccount};
+use solana_readonly_account::{KeyedAccount, ReadonlyAccountOwner};
 use spl_associated_token_account_interface::RecoverNestedKeys;
 
 use crate::pda::{AtaCreatePdaArgs, AtaFindPdaArgs};
 
-pub struct RecoverNestedRootAccounts<A: ReadonlyAccount + KeyedAccount> {
+pub struct RecoverNestedRootAccounts<A: KeyedAccount + ReadonlyAccountOwner> {
     pub wallet: Pubkey,
     pub owner_token_account_mint: A,
     pub nested_mint: A,
 }
 
-impl<A: ReadonlyAccount + KeyedAccount> RecoverNestedRootAccounts<A> {
+impl<A: KeyedAccount + ReadonlyAccountOwner> RecoverNestedRootAccounts<A> {
     /// Determins the spl-token program ID to use from the program owners of
     /// owner_token_account_mint and nested_mint
     /// Returns ProgramError::IllegalOwner if the 2 dont match

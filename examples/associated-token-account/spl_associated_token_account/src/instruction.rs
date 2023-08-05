@@ -6,7 +6,7 @@ use spl_associated_token_account_interface::{
     RecoverNestedIxArgs,
 };
 use spl_associated_token_account_lib::resolvers::{
-    create::CreateRootKeys, recover_nested::RecoverNestedRootKeys,
+    create::CreateKeysTokenProgramResolved, recover_nested::RecoverNestedRootKeys,
 };
 
 pub fn create_associated_token_account(
@@ -15,7 +15,7 @@ pub fn create_associated_token_account(
     token_mint_address: &Pubkey,
     token_program_id: &Pubkey,
 ) -> Instruction {
-    let root_keys = CreateRootKeys {
+    let root_keys = CreateKeysTokenProgramResolved {
         funding_account: *funding_address,
         wallet: *wallet_address,
         mint: *token_mint_address,
@@ -30,7 +30,7 @@ pub fn create_associated_token_account_idempotent(
     token_mint_address: &Pubkey,
     token_program_id: &Pubkey,
 ) -> Instruction {
-    let root_keys = CreateRootKeys {
+    let root_keys = CreateKeysTokenProgramResolved {
         funding_account: *funding_address,
         wallet: *wallet_address,
         mint: *token_mint_address,
