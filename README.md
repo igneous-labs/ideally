@@ -147,7 +147,7 @@ pub fn process_create_associated_token_account(program_id: &Pubkey, accounts: &[
     let actual_accounts: CreateAccounts = actual_accounts_slice.into();
 
     // program checks the identity of
-    // token_mint, system_program, and associated_token_account
+    // token_program, system_program, and associated_token_account
     // with 1 function call
     if let Err((actual_pubkey, expected_pubkey)) = create_verify_account_keys(&actual_accounts, &expected_keys) {
         return Err(ProgramError::InvalidAccountData);
